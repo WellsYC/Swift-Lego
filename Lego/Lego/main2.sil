@@ -1,0 +1,224 @@
+sil_stage canonical
+
+import Builtin
+import Swift
+import SwiftShims
+
+import Foundation
+
+struct Wells {
+  @_hasStorage @_hasInitialValue var age: Int { get set }
+  @_hasStorage @_hasInitialValue var name: String { get set }
+  init()
+  init(age: Int = 18, name: String = "abc")
+}
+
+@_hasStorage @_hasInitialValue let w: Wells { get }
+
+// w
+sil_global hidden [let] @$s5main21wAA5WellsVvp : $Wells
+
+// main
+sil @main : $@convention(c) (Int32, UnsafeMutablePointer<Optional<UnsafeMutablePointer<Int8>>>) -> Int32 {
+bb0(%0 : $Int32, %1 : $UnsafeMutablePointer<Optional<UnsafeMutablePointer<Int8>>>):
+  alloc_global @$s5main21wAA5WellsVvp             // id: %2
+  %3 = global_addr @$s5main21wAA5WellsVvp : $*Wells // user: %7
+  %4 = metatype $@thin Wells.Type                 // user: %6
+  // function_ref Wells.init()
+  %5 = function_ref @$s5main25WellsVACycfC : $@convention(method) (@thin Wells.Type) -> @owned Wells // user: %6
+  %6 = apply %5(%4) : $@convention(method) (@thin Wells.Type) -> @owned Wells // user: %7
+  store %6 to %3 : $*Wells                        // id: %7
+  %8 = integer_literal $Builtin.Int32, 0          // user: %9
+  %9 = struct $Int32 (%8 : $Builtin.Int32)        // user: %10
+  return %9 : $Int32                              // id: %10
+} // end sil function 'main'
+
+// variable initialization expression of Wells.age
+sil hidden [transparent] @$s5main25WellsV3ageSivpfi : $@convention(thin) () -> Int {
+bb0:
+  %0 = integer_literal $Builtin.Int64, 18         // user: %1
+  %1 = struct $Int (%0 : $Builtin.Int64)          // user: %2
+  return %1 : $Int                                // id: %2
+} // end sil function '$s5main25WellsV3ageSivpfi'
+
+// Int.init(_builtinIntegerLiteral:)
+sil public_external [transparent] [serialized] @$sSi22_builtinIntegerLiteralSiBI_tcfC : $@convention(method) (Builtin.IntLiteral, @thin Int.Type) -> Int {
+// %0                                             // user: %2
+bb0(%0 : $Builtin.IntLiteral, %1 : $@thin Int.Type):
+  %2 = builtin "s_to_s_checked_trunc_IntLiteral_Int64"(%0 : $Builtin.IntLiteral) : $(Builtin.Int64, Builtin.Int1) // user: %3
+  %3 = tuple_extract %2 : $(Builtin.Int64, Builtin.Int1), 0 // user: %4
+  %4 = struct $Int (%3 : $Builtin.Int64)          // user: %5
+  return %4 : $Int                                // id: %5
+} // end sil function '$sSi22_builtinIntegerLiteralSiBI_tcfC'
+
+// Wells.age.getter
+sil hidden [transparent] @$s5main25WellsV3ageSivg : $@convention(method) (@guaranteed Wells) -> Int {
+// %0 "self"                                      // users: %2, %1
+bb0(%0 : $Wells):
+  debug_value %0 : $Wells, let, name "self", argno 1 // id: %1
+  %2 = struct_extract %0 : $Wells, #Wells.age     // user: %3
+  return %2 : $Int                                // id: %3
+} // end sil function '$s5main25WellsV3ageSivg'
+
+// Wells.age.setter
+sil hidden [transparent] @$s5main25WellsV3ageSivs : $@convention(method) (Int, @inout Wells) -> () {
+// %0 "value"                                     // users: %6, %2
+// %1 "self"                                      // users: %4, %3
+bb0(%0 : $Int, %1 : $*Wells):
+  debug_value %0 : $Int, let, name "value", argno 1 // id: %2
+  debug_value_addr %1 : $*Wells, var, name "self", argno 2 // id: %3
+  %4 = begin_access [modify] [static] %1 : $*Wells // users: %7, %5
+  %5 = struct_element_addr %4 : $*Wells, #Wells.age // user: %6
+  store %0 to %5 : $*Int                          // id: %6
+  end_access %4 : $*Wells                         // id: %7
+  %8 = tuple ()                                   // user: %9
+  return %8 : $()                                 // id: %9
+} // end sil function '$s5main25WellsV3ageSivs'
+
+// Wells.age.modify
+sil hidden [transparent] @$s5main25WellsV3ageSivM : $@yield_once @convention(method) (@inout Wells) -> @yields @inout Int {
+// %0 "self"                                      // users: %2, %1
+bb0(%0 : $*Wells):
+  debug_value_addr %0 : $*Wells, var, name "self", argno 1 // id: %1
+  %2 = begin_access [modify] [static] %0 : $*Wells // users: %5, %8, %3
+  %3 = struct_element_addr %2 : $*Wells, #Wells.age // user: %4
+  yield %3 : $*Int, resume bb1, unwind bb2        // id: %4
+
+bb1:                                              // Preds: bb0
+  end_access %2 : $*Wells                         // id: %5
+  %6 = tuple ()                                   // user: %7
+  return %6 : $()                                 // id: %7
+
+bb2:                                              // Preds: bb0
+  end_access %2 : $*Wells                         // id: %8
+  unwind                                          // id: %9
+} // end sil function '$s5main25WellsV3ageSivM'
+
+// variable initialization expression of Wells.name
+sil hidden [transparent] @$s5main25WellsV4nameSSvpfi : $@convention(thin) () -> @owned String {
+bb0:
+  %0 = string_literal utf8 "abc"                  // user: %5
+  %1 = integer_literal $Builtin.Word, 3           // user: %5
+  %2 = integer_literal $Builtin.Int1, -1          // user: %5
+  %3 = metatype $@thin String.Type                // user: %5
+  // function_ref String.init(_builtinStringLiteral:utf8CodeUnitCount:isASCII:)
+  %4 = function_ref @$sSS21_builtinStringLiteral17utf8CodeUnitCount7isASCIISSBp_BwBi1_tcfC : $@convention(method) (Builtin.RawPointer, Builtin.Word, Builtin.Int1, @thin String.Type) -> @owned String // user: %5
+  %5 = apply %4(%0, %1, %2, %3) : $@convention(method) (Builtin.RawPointer, Builtin.Word, Builtin.Int1, @thin String.Type) -> @owned String // user: %6
+  return %5 : $String                             // id: %6
+} // end sil function '$s5main25WellsV4nameSSvpfi'
+
+// String.init(_builtinStringLiteral:utf8CodeUnitCount:isASCII:)
+sil [serialized] [always_inline] [readonly] [_semantics "string.makeUTF8"] @$sSS21_builtinStringLiteral17utf8CodeUnitCount7isASCIISSBp_BwBi1_tcfC : $@convention(method) (Builtin.RawPointer, Builtin.Word, Builtin.Int1, @thin String.Type) -> @owned String
+
+// Wells.name.getter
+sil hidden [transparent] @$s5main25WellsV4nameSSvg : $@convention(method) (@guaranteed Wells) -> @owned String {
+// %0 "self"                                      // users: %2, %1
+bb0(%0 : $Wells):
+  debug_value %0 : $Wells, let, name "self", argno 1 // id: %1
+  %2 = struct_extract %0 : $Wells, #Wells.name    // users: %4, %3
+  retain_value %2 : $String                       // id: %3
+  return %2 : $String                             // id: %4
+} // end sil function '$s5main25WellsV4nameSSvg'
+
+// Wells.name.setter
+sil hidden [transparent] @$s5main25WellsV4nameSSvs : $@convention(method) (@owned String, @inout Wells) -> () {
+// %0 "value"                                     // users: %11, %8, %4, %2
+// %1 "self"                                      // users: %5, %3
+bb0(%0 : $String, %1 : $*Wells):
+  debug_value %0 : $String, let, name "value", argno 1 // id: %2
+  debug_value_addr %1 : $*Wells, var, name "self", argno 2 // id: %3
+  retain_value %0 : $String                       // id: %4
+  %5 = begin_access [modify] [static] %1 : $*Wells // users: %10, %6
+  %6 = struct_element_addr %5 : $*Wells, #Wells.name // users: %8, %7
+  %7 = load %6 : $*String                         // user: %9
+  store %0 to %6 : $*String                       // id: %8
+  release_value %7 : $String                      // id: %9
+  end_access %5 : $*Wells                         // id: %10
+  release_value %0 : $String                      // id: %11
+  %12 = tuple ()                                  // user: %13
+  return %12 : $()                                // id: %13
+} // end sil function '$s5main25WellsV4nameSSvs'
+
+// Wells.name.modify
+sil hidden [transparent] @$s5main25WellsV4nameSSvM : $@yield_once @convention(method) (@inout Wells) -> @yields @inout String {
+// %0 "self"                                      // users: %2, %1
+bb0(%0 : $*Wells):
+  debug_value_addr %0 : $*Wells, var, name "self", argno 1 // id: %1
+  %2 = begin_access [modify] [static] %0 : $*Wells // users: %5, %8, %3
+  %3 = struct_element_addr %2 : $*Wells, #Wells.name // user: %4
+  yield %3 : $*String, resume bb1, unwind bb2     // id: %4
+
+bb1:                                              // Preds: bb0
+  end_access %2 : $*Wells                         // id: %5
+  %6 = tuple ()                                   // user: %7
+  return %6 : $()                                 // id: %7
+
+bb2:                                              // Preds: bb0
+  end_access %2 : $*Wells                         // id: %8
+  unwind                                          // id: %9
+} // end sil function '$s5main25WellsV4nameSSvM'
+
+// default argument 0 of Wells.init(age:name:)
+sil hidden @$s5main25WellsV3age4nameACSi_SStcfcfA_ : $@convention(thin) () -> Int {
+bb0:
+  %0 = integer_literal $Builtin.Int64, 18         // user: %1
+  %1 = struct $Int (%0 : $Builtin.Int64)          // user: %2
+  return %1 : $Int                                // id: %2
+} // end sil function '$s5main25WellsV3age4nameACSi_SStcfcfA_'
+
+// default argument 1 of Wells.init(age:name:)
+sil hidden @$s5main25WellsV3age4nameACSi_SStcfcfA0_ : $@convention(thin) () -> @owned String {
+bb0:
+  %0 = string_literal utf8 "abc"                  // user: %5
+  %1 = integer_literal $Builtin.Word, 3           // user: %5
+  %2 = integer_literal $Builtin.Int1, -1          // user: %5
+  %3 = metatype $@thin String.Type                // user: %5
+  // function_ref String.init(_builtinStringLiteral:utf8CodeUnitCount:isASCII:)
+  %4 = function_ref @$sSS21_builtinStringLiteral17utf8CodeUnitCount7isASCIISSBp_BwBi1_tcfC : $@convention(method) (Builtin.RawPointer, Builtin.Word, Builtin.Int1, @thin String.Type) -> @owned String // user: %5
+  %5 = apply %4(%0, %1, %2, %3) : $@convention(method) (Builtin.RawPointer, Builtin.Word, Builtin.Int1, @thin String.Type) -> @owned String // user: %6
+  return %5 : $String                             // id: %6
+} // end sil function '$s5main25WellsV3age4nameACSi_SStcfcfA0_'
+
+// Wells.init(age:name:)
+sil hidden @$s5main25WellsV3age4nameACSi_SStcfC : $@convention(method) (Int, @owned String, @thin Wells.Type) -> @owned Wells {
+// %0 "$implicit_value"                           // user: %3
+// %1 "$implicit_value"                           // user: %3
+// %2 "$metatype"
+bb0(%0 : $Int, %1 : $String, %2 : $@thin Wells.Type):
+  %3 = struct $Wells (%0 : $Int, %1 : $String)    // user: %4
+  return %3 : $Wells                              // id: %4
+} // end sil function '$s5main25WellsV3age4nameACSi_SStcfC'
+
+// Wells.init()
+sil hidden @$s5main25WellsVACycfC : $@convention(method) (@thin Wells.Type) -> @owned Wells {
+// %0 "$metatype"
+bb0(%0 : $@thin Wells.Type):
+  %1 = alloc_stack $Wells, let, name "self"       // users: %6, %2, %18, %19
+  %2 = struct_element_addr %1 : $*Wells, #Wells.age // user: %5
+  %3 = integer_literal $Builtin.Int64, 18         // user: %4
+  %4 = struct $Int (%3 : $Builtin.Int64)          // users: %5, %15
+  store %4 to %2 : $*Int                          // id: %5
+  %6 = struct_element_addr %1 : $*Wells, #Wells.name // user: %14
+  %7 = string_literal utf8 "abc"                  // user: %12
+  %8 = integer_literal $Builtin.Word, 3           // user: %12
+  %9 = integer_literal $Builtin.Int1, -1          // user: %12
+  %10 = metatype $@thin String.Type               // user: %12
+  // function_ref String.init(_builtinStringLiteral:utf8CodeUnitCount:isASCII:)
+  %11 = function_ref @$sSS21_builtinStringLiteral17utf8CodeUnitCount7isASCIISSBp_BwBi1_tcfC : $@convention(method) (Builtin.RawPointer, Builtin.Word, Builtin.Int1, @thin String.Type) -> @owned String // user: %12
+  %12 = apply %11(%7, %8, %9, %10) : $@convention(method) (Builtin.RawPointer, Builtin.Word, Builtin.Int1, @thin String.Type) -> @owned String // users: %17, %15, %14, %13
+  retain_value %12 : $String                      // id: %13
+  store %12 to %6 : $*String                      // id: %14
+  %15 = struct $Wells (%4 : $Int, %12 : $String)  // users: %20, %16
+  retain_value %15 : $Wells                       // id: %16
+  release_value %12 : $String                     // id: %17
+  destroy_addr %1 : $*Wells                       // id: %18
+  dealloc_stack %1 : $*Wells                      // id: %19
+  return %15 : $Wells                             // id: %20
+} // end sil function '$s5main25WellsVACycfC'
+
+
+
+// Mappings from '#fileID' to '#filePath':
+//   'main2/main2.swift' => 'main2.swift'
+
+
